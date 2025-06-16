@@ -7,7 +7,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Update if your frontend runs elsewhere
+    allow_origins=["http://localhost:3000","https://acpn-pdf-to-excel-frontend.vercel.app"],  # Update if your frontend runs elsewhere
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

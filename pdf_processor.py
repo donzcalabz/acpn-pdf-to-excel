@@ -4,8 +4,8 @@ from io import BytesIO
 from sqlalchemy import create_engine
 
 
-DATABASE_URL = "postgresql://postgres:password@localhost:5432/pdf-converter"
-engine = create_engine(DATABASE_URL)
+# DATABASE_URL = "postgresql://postgres:password@localhost:5432/pdf-converter"
+# engine = create_engine(DATABASE_URL)
 
 # Use only this as the fixed header
 FINAL_HEADER = [
@@ -73,6 +73,7 @@ def process_pdf(file_bytes: bytes) -> BytesIO:
                     # No physician row — still create the row with empty physician
                     new_row = deepcopy(base_row)
                     new_row.insert(4, "")  # Insert empty physician field
+                    new_row.insert(6, '')  # Insert physician name after Patient Name
                     data_rows.append(new_row)
                     j += 1
 
@@ -95,10 +96,10 @@ def process_pdf(file_bytes: bytes) -> BytesIO:
     df = pd.DataFrame(clean_data, columns=FINAL_HEADER)
     df = df.fillna(method="ffill", axis=0)
 
-    try:
-        df.to_sql("pdf_data", engine, if_exists="append", index=False)
-    except Exception as e:
-        print("❌ Failed to insert into DB:", e)
+    # try:
+    #     df.to_sql("pdf_data", engine, if_exists="append", index=False)
+    # except Exception as e:
+    #     print("❌ Failed to insert into DB:", e)
 
     output = BytesIO()
     with pd.ExcelWriter(output, engine="openpyxl") as writer:
